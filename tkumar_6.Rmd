@@ -1,0 +1,101 @@
+---
+title: "Transportation Assignment 6"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Model name: 
+  a linear program with 6 decision variables and 5 constraints
+  
+/* Objective function */
+min: 22X600 x11 + 14X600 x12 + 30X600 x13 + 16X625 x21 + 20X625 x22 + 24X625 x23
+
+/* Constraints */
+
+x11 + x12 + x13 <=100
+x21 + x22 + x23 <=120
+x11 + x21 =80
+x12 + x21 =60
+x13 + x23 =70
+
+Now, load the library
+```{r}
+library(lpSolveAPI)
+```
+Let us set up the Heart Start transportation problem. We have 6 decision variables, and 5 constraints.
+In the first formulation, we will directly create the objective function and constraints.
+
+```{r}
+# make an lp object with 0 constraints and 6 decision variables
+lprec <- make.lp(0, 6)
+
+# Creating objective function. The default is a minimization problem. 
+set.objfn(lprec, c(13200,8400,18000,10000,12500,15000))
+
+# As the default is a minimization problem, so no need to change the direction 
+
+# Add the constraints
+#Plant production Capacity constraints
+add.constraint(lprec, c(1, 1, 1, 0 ,0 ,0), "<=", 100)
+add.constraint(lprec, c(0, 0, 0, 1 ,1 ,1), "<=", 120)
+
+#Warehouse demand constraints
+add.constraint(lprec, c(1, 0, 0, 1, 0 ,0 ), "=", 80)
+add.constraint(lprec, c(0, 1, 0, 0, 1 ,0 ), "=", 60)
+add.constraint(lprec, c(0, 0, 1, 0, 0 ,1 ), "=", 70)
+
+
+# Set bounds for variables explicitly.
+
+set.bounds(lprec, lower = c(0, 0, 0, 0, 0, 0), columns = c(1, 2,3,4,5,6)) 
+
+# set variable names and name the constraints
+RowNames <- c("PlantAProdCap", "PlantBProdCap", "Ware1Demand","Ware2Demand", "Ware3Demand")
+
+ColNames <- c("PlantAWar1Quant", "PlantAWar2Quant", "PlantAWar3Quant", "PlantBWar1Quant", "PlantBWar2Quant", "PlantBWar3Quant")
+
+dimnames(lprec) <- list(RowNames, ColNames)
+
+# Now, print out the model
+lprec
+
+# The model can also be saved to a file
+write.lp(lprec, filename = "HeartStart.lp", type = "lp")
+```
+
+We now solve the above LP problem
+```{r}
+solve(lprec)
+```
+
+
+We now output the value of the objective function, and the variables
+```{r}
+get.objective(lprec)
+get.variables(lprec)
+```
+
+
+```{r}
+x <- read.lp("HeartStart.lp") # create an lp object x
+x                              # display x
+```
+
+Solve the lp model
+```{r}
+solve(x)
+get.objective(x)        # get objective value
+get.variables(x)        # get values of decision variables
+get.constraints(x)      # get constraint RHS values
+```
