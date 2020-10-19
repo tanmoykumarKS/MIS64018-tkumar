@@ -19,7 +19,7 @@ Model name:
   a linear program with 6 decision variables and 5 constraints
   
 /* Objective function */
-min: 22X600 x11 + 14X600 x12 + 30X600 x13 + 16X625 x21 + 20X625 x22 + 24X625 x23
+min: (22+600) x11 + (14+600) x12 + (30+600) x13 + (16+625) x21 + (20+625) x22 + (24+625) x23
 
 /* Constraints */
 
@@ -41,7 +41,7 @@ In the first formulation, we will directly create the objective function and con
 lprec <- make.lp(0, 6)
 
 # Creating objective function. The default is a minimization problem. 
-set.objfn(lprec, c(13200,8400,18000,10000,12500,15000))
+set.objfn(lprec, c(622,614,630,641,645,649))
 
 # As the default is a minimization problem, so no need to change the direction 
 
