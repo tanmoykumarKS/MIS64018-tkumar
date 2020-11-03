@@ -16,13 +16,13 @@ When you click the **Knit** button a document will be generated that includes bo
 We will now run DEA analysis using the benchmarking library.
 
 ```{r}
-library(lpSolveAPI)
+rm(list = ls())
 #install.packages("Benchmarking")
 library(Benchmarking)
 
 ```
 
-Now, we read our input data. We will read the data as input and output as vectors.
+Data is being loaded as input and output vectors.
 ```{r}
 x <- matrix(c(150,400,320,520,350,320,200,700,1200,2000,1200,700),ncol = 2)
 y <- matrix(c(14000,14000,42000,28000,19000,14000,3500,21000,10500,42000,25000,15000),ncol = 2)
@@ -35,57 +35,74 @@ We now run the DEA analysis. We use the option of CRS, Constant Return to Scale.
 ```{r}
 e <- dea(x,y,RTS = "crs")  # provide the input and output 
 e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
+e1<-e
+peers(e)  # identify the peers
+lambda(e) # identify the relative weights given to the peers
+dea.plot.isoquant(x,y,RTS="crs") # plot the results
 ```
 
 The results indicate that DMUs 1, 2, 3 and 4 are efficient. DMU(6) is only 86% efficient, and DMU(5) is 97% efficient.
 Further, the peer units for DMU(5) are 1, 2 and 4, with relative weights 0.20, 0.08 and 0.53. Similary for DMU(6), the peer units are 1, 2 and 4, with weights 0.34, 0.39 and 0.13, respectively.
 
-We now run the DEA analysis. We use the option of FDH.
-```{r}
-e <- dea(x,y,RTS = "fdh")  # provide the input and output 
-e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
-```
 
-
-We now run the DEA analysis. We use the option of VRS. 
+We now run the DEA analysis. We use the option of VRS. Varying Return to Scale.  
 ```{r}
 e <- dea(x,y,RTS = "vrs")  # provide the input and output 
 e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
+e2<-e
+peers(e)   # identify the peers
+lambda(e)  # identify the relative weights given to the peers
+dea.plot.isoquant(x,y,RTS="vrs")  # plot the results
 ```
 
-
-We now run the DEA analysis. We use the option of IRS 
+We now run the DEA analysis. We use the option of IRS. Increasing Return to Scale. 
 ```{r}
 e <- dea(x,y,RTS = "irs")  # provide the input and output 
 e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
+e3<-e
+peers(e)  # identify the peers
+lambda(e) # identify the relative weights given to the peers
+dea.plot.isoquant(x,y,RTS="irs")     # plot the results
 ```
 
-We now run the DEA analysis. We use the option of DRS 
+We now run the DEA analysis. We use the option of DRS. Decreasing REturn to Scale.  
 ```{r}
 e <- dea(x,y,RTS = "drs")  # provide the input and output 
 e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
+e4<-e
+peers(e)    # identify the peers
+lambda(e)   # identify the relative weights given to the peers
+dea.plot.isoquant(x,y,RTS="drs")  # plot the results
 ```
-
-We now run the DEA analysis. We use the option of FRH 
+We now run the DEA analysis. We use the option of FDH. Free Disposability Hull. 
+```{r}
+e <- dea(x,y,RTS = "fdh")  # provide the input and output 
+e
+e5<-e
+peers(e)  # identify the peers
+lambda(e) # identify the relative weights given to the peers
+dea.plot.isoquant(x,y,RTS="fdh") # plot the results
+```
+We now run the DEA analysis. We use the option of FRH. Free Replicability Hull. 
 ```{r}
 e <- dea(x,y,RTS = "add")  # provide the input and output 
 e
-peers(e)                       # identify the peers
-lambda(e)                      # identify the relative weights given to the peers
-#dea.plot.isoquant(x,y,RTS="crs")     # plot the results
+e6<-e
+peers(e)   # identify the peers
+lambda(e)  # identify the relative weights given to the peers
+#dea.plot.isoquant(x,y,RTS="add")     # plot the results
+
 ```
+DEA analysis data summarization and comparison  
+```{r}
+#Efficiency comparison 
+list(CRS=e1,VRS=e2,IRS=e3,DRS=e4,FDH=e5,FRH=e6)
+
+#Peer Comparison 
+list(CRS=peers(e1),VRS=peers(e2),IRS=peers(e3),DRS=peers(e4),FDH=peers(e5),FRH=peers(e6))
+
+
+#Lambda Comparison 
+list(CRS=lambda(e1),VRS=lambda(e2),IRS=lambda(e3),DRS=lambda(e4),FDH=lambda(e5),FRH=lambda(e6))
+```
+
