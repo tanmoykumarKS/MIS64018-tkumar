@@ -37,18 +37,18 @@ D = decrease (if any) in next year’s earnings from the current year’s level.
 
 If we rewrite the objective function using the auxiliary variable, then objective function gets formulate like below:
 
-Maximize P-6(y1p-y1n)-3y2n
-Please note that we have already removed or made the value of y2p because for increase in value more than 75M, Thus increase in amount in expected but not decrease. Thus, y2p=0. 
-
+Maximize P-6(y1p+y1n)-3y2n
 
 Thus forming LP function as below: 
 
 // Objective function
-max: P -6 y1p + 6 y1n - 3 y2n;
+max: P -6 y1p - 6 y1n - 3 y2n;
+
+There is no penalty for increase in profit thats why y2p is set to zero
 
 // Constraints
-6 x1 + 4 x2 + 5 x3 + y2n = 75;
-8 x1 + 7 x2 + 5 x3 + y1p - y1n = 50;
+6 x1 + 4 x2 + 5 x3 + y1n - y1p= 50;
+8 x1 + 7 x2 + 5 x3 + y2n - y2p = 75;
 20 x1 + 15 x2 + 25 x3 = P;
 
 
@@ -61,9 +61,9 @@ solve(mx)
 get.objective(mx)
 get.variables(mx)
 ```
-Objective function value is 768.75 which is overall profit of the company 
+Objective function value is 225 which is overall profit of the company 
 
 Rate of production of Product 1 = 0
-Rate of production of Product 2 = 18.75
-Rate of production of Product 3 = 0
+Rate of production of Product 2 = 0
+Rate of production of Product 3 = 15
 
