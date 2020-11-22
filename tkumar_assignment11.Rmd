@@ -1,0 +1,88 @@
+---
+title: "Assignment 11 - Integer Programming"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+The purpose of this assignment is to formulate and solve an integer programming problem.
+
+```{r}
+library(lpSolveAPI)
+```
+AP shipping service worker scheduling 
+
+```{r}
+# make an lp object with 0 constraints and 7 decision variables
+lprec <- make.lp(0, 7)
+
+# Creating objective function. The default is a minimization problem
+set.objfn(lprec, c(775,800,800,800,800,775,750))
+
+# Add the constraints
+add.constraint(lprec, c(0, 1, 1, 1, 1 ,1, 0), ">=", 18)
+add.constraint(lprec, c(0, 0, 1, 1, 1 ,1, 1), ">=", 27)
+add.constraint(lprec, c(1, 0, 0, 1, 1 ,1, 1), ">=", 22)
+add.constraint(lprec, c(1, 1, 0, 0, 1 ,1, 1), ">=", 26)
+add.constraint(lprec, c(1, 1, 1, 0, 0 ,1, 1), ">=", 25)
+add.constraint(lprec, c(1, 1, 1, 1, 0 ,0, 1), ">=", 21)
+add.constraint(lprec, c(1, 1, 1, 1, 1 ,0, 0), ">=", 19)
+
+# Set bounds for variables explicitly.
+set.bounds(lprec, lower = c(0, 0, 0, 0, 0, 0, 0), columns = c(1, 2,3,4,5,6,7))
+
+#Making the decision variables as Integer 
+set.type(lprec,1:7,"integer")
+
+# Nameing the decision variables (column) and constraints (rows)
+lp.rownames <- c("Sunday", "Monday", "Tuesday", "Wednesady", "Thursday", "Friday", "Saturday")
+
+#Rows represents the day shift starts 
+lp.colnames <- c("Shift1", "Shift2", "Shift3", "Shift4", "Shift5", "Shift6", "Shift7")
+dimnames(lprec) <- list(lp.rownames, lp.colnames)
+
+# view the linear program object to make sure it's correct
+lprec
+
+# Writing the model to a file
+write.lp(lprec, filename = "APShipping.lp", type = "lp")
+
+```
+
+
+```{r}
+
+# Solving it as a LP model
+solve(lprec)
+
+# Objective function value:
+get.objective(lprec)
+
+# Total wage cost :25675
+
+# Optimal decision variable values:
+get.variables(lprec)
+
+# Values of the Contraints 
+get.constraints(lprec)
+
+#Shift 1 No. of workers: 18
+#Shift 2 No. of workers: 27
+#Shift 3 No. of workers: 25
+#Shift 4 No. of workers: 26
+#Shift 5 No. of workers: 27
+#Shift 6 No. of workers: 23
+#Shift 7 No. of workers: 19
+
+```
+
