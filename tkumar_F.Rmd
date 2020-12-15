@@ -1,0 +1,110 @@
+---
+title: "Quantitative Mgmt - Final Exam"
+author: "Tanmoy Kumar"
+date: "12/8/2020"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(lpSolveAPI)
+
+# make an lp object with 0 constraints and 7 decision variables
+lprec <- make.lp(0, 48)
+
+# Creating objective function. The default is a minimization problem
+set.objfn(lprec, c(3.5,4,3.7,3.1,3.8,3.2,3.6,3,3.3,3.7,4,3.5,3.5,4,3.7,3.1,3.8,3.2,3.6,3,3.3,3.7,4,3.5,3.5,4,3.7,3.1,3.8,3.2,3.6,3,3.3,3.7,4,3.5,3.5,4,3.7,3.1,3.8,3.2,3.6,3,3.3,3.7,4,3.5))
+
+# As the default is a minimization problem, we change the direction to set maximization
+lp.control(lprec,sense='max')
+
+# Add the constraints
+
+#Group Constraints 
+add.constraint(lprec, c(1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 3)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 3)
+add.constraint(lprec, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 3)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1), "=", 3)
+
+#Student Constraints 
+add.constraint(lprec, c( 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 1) 
+add.constraint(lprec, c( 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0), "=", 1)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1), "=", 1)
+
+#Factor1 Constraints:
+add.constraint(lprec, c(3.5, 4, 3.7, 3.1, 3.8 ,3.2, 3.6, 3, 3.3, 3.7, 4, 3.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 3.53)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.5, 4, 3.7, 3.1, 3.8 ,3.2, 3.6, 3, 3.3, 3.7, 4, 3.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 3.53)
+add.constraint(lprec, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.5, 4, 3.7, 3.1, 3.8 ,3.2, 3.6, 3, 3.3, 3.7, 4, 3.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 3.53)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.5, 4, 3.7, 3.1, 3.8 ,3.2, 3.6, 3, 3.3, 3.7, 4, 3.5), ">=", 3.53)
+
+#Factor2 Constraints:
+add.constraint(lprec, c(10, 2, 5, 7, 9 ,6, 7, 12, 7, 9, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 7)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 2, 5, 7, 9 ,6, 7, 12, 7, 9, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 7)
+add.constraint(lprec, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 2, 5, 7, 9 ,6, 7, 12, 7, 9, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 7)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 2, 5, 7, 9 ,6, 7, 12, 7, 9, 6, 4), ">=", 7)
+
+#Factor3 Constraints:
+add.constraint(lprec, c(6, 5, 2, 7, 5 ,6, 7, 6, 8, 9, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 6.08)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 5, 2, 7, 5 ,6, 7, 6, 8, 9, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 6.08)
+add.constraint(lprec, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 5, 2, 7, 5 ,6, 7, 6, 8, 9, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), ">=", 6.08)
+add.constraint(lprec, c( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 5, 2, 7, 5 ,6, 7, 6, 8, 9, 8, 4), ">=", 6.08)
+
+# Set bounds for variables explicitly.
+set.bounds(lprec, lower = c(0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0), columns = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48))
+
+#Making the decision variables as Integer 
+set.type(lprec,1:48,"integer")
+
+# Nameing the decision variables (column) and constraints (rows)
+lp.colnames <- c("G1S1", "G1S2", "G1S3", "G1S4", "G1S5", "G1S6", "G1S7", "G1S8", "G1S9", "G1S10", "G1S11", "G1S12", "G2S1", "G2S2", "G2S3", "G2S4", "G2S5", "G2S6", "G2S7", "G2S8", "G2S9", "G2S10", "G2S11", "G2S12","G3S1", "G3S2", "G3S3", "G3S4", "G3S5", "G3S6", "G3S7", "G3S8", "G3S9", "G3S10", "G3S11", "G3S12", "G4S1", "G4S2", "G4S3", "G4S4", "G4S5", "G4S6", "G4S7", "G4S8", "G4S9", "G4S10", "G4S11", "G4S12")
+
+#Rows represents the day shift starts 
+lp.rownames <- c("Group1Students", "Group2Students", "Group3Students", "Group4Students", "Student1", "Student2", "Student3", "Student4", "Student5", "Student6","Student7","Student8","Student9","Student10","Student11","Student12","Group1Factor1","Group2Factor1","Group3Factor1","Group4Factor1","Group1Factor2","Group2Factor2","Group3Factor2","Group4Factor2","Group1Factor3","Group2Factor3","Group3Factor3","Group4Factor3")
+dimnames(lprec) <- list(lp.rownames, lp.colnames)
+
+# view the linear program object to make sure it's correct
+lprec
+
+# Writing the model to a file
+write.lp(lprec, filename = "Group.lp", type = "lp")
+```
+Solving the linear model to get the optimum values
+
+```{r}
+
+# Solving it as a LP model
+solve(lprec)
+
+# Objective function value:
+get.objective(lprec)
+
+# Total max score of GPA :42.4
+
+# Optimal decision variable values:
+get.variables(lprec)
+
+# Values of the Contraints 
+get.constraints(lprec)
+
+```
+
